@@ -13,71 +13,77 @@ const codeLowerLetterY = 121;
 const codeLowerLetterZ = 122;
 
 const shiftNumber = 3;
+const turnToLetter = charCode => String.fromCharCode(charCode);
 
-const encode = (char) => {
-  if (char.charCodeAt() >= codeUpperLetterA && 
-  char.charCodeAt() <= codeUpperLetterZ) {
-    if (char.charCodeAt() === codeUpperLetterX) {
-      return String.fromCharCode(codeUpperLetterA);
-    } else if (char.charCodeAt() === codeUpperLetterY) {
-      return String.fromCharCode(codeUpperLetterB);
-    } else if (char.charCodeAt() === codeUpperLetterZ) {
-      return String.fromCharCode(codeUpperLetterC);
+const encode = message => {
+  let encodedMessage = '';
+  for (let i = 0; i < message.length; i++) {
+    let char = message[i];
+    if (char.charCodeAt() >= codeUpperLetterA &&
+      char.charCodeAt() <= codeUpperLetterZ) {
+      if (char.charCodeAt() === codeUpperLetterX) {
+        encodedMessage += turnToLetter(codeUpperLetterA);
+      } else if (char.charCodeAt() === codeUpperLetterY) {
+        encodedMessage += turnToLetter(codeUpperLetterB);
+      } else if (char.charCodeAt() === codeUpperLetterZ) {
+        encodedMessage += turnToLetter(codeUpperLetterC);
+      } else {
+        encodedMessage += turnToLetter(char.charCodeAt() + shiftNumber);
+      }
+    } else if (char.charCodeAt() >= codeLowerLetterA &&
+      char.charCodeAt() <= codeLowerLetterZ) {
+      if (char.charCodeAt() === codeLowerLetterX) {
+        encodedMessage += turnToLetter(codeLowerLetterA);
+      } else if (char.charCodeAt() === codeLowerLetterY) {
+        encodedMessage += turnToLetter(codeLowerLetterB);
+      } else if (char.charCodeAt() === codeLowerLetterZ) {
+        encodedMessage += turnToLetter(codeLowerLetterC);
+      } else {
+        encodedMessage += turnToLetter(char.charCodeAt() + shiftNumber);
+      }
     } else {
-      return String.fromCharCode(char.charCodeAt() + shiftNumber);
+      encodedMessage += char;
     }
-  } else if (char.charCodeAt() >= codeLowerLetterA && 
-  char.charCodeAt() <= codeLowerLetterZ) {
-    if (char.charCodeAt() === codeLowerLetterX) {
-      return String.fromCharCode(codeLowerLetterA);
-    } else if (char.charCodeAt() === codeLowerLetterY) {
-      return String.fromCharCode(codeLowerLetterB);
-    } else if (char.charCodeAt() === codeLowerLetterZ) {
-      return String.fromCharCode(codeLowerLetterC);
-    } else {
-      return String.fromCharCode(char.charCodeAt() + shiftNumber);
-    }
-  } else {
-    return char;
   }
+  return encodedMessage;
 };
 
-const decode = (char) => {
-  if (char.charCodeAt() >= codeUpperLetterA && 
-  char.charCodeAt() <= codeUpperLetterZ) {
-    if (char.charCodeAt() === codeUpperLetterA) {
-      return String.fromCharCode(codeUpperLetterX);
-    } else if (char.charCodeAt() === codeUpperLetterB) {
-      return String.fromCharCode(codeUpperLetterY);
-    } else if (char.charCodeAt() === codeUpperLetterC) {
-      return String.fromCharCode(codeUpperLetterZ);
+const decode = message => {
+  let decodedMessage = '';
+  for (let i = 0; i < message.length; i++) {
+    let char = message[i];
+    if (char.charCodeAt() >= codeUpperLetterA &&
+      char.charCodeAt() <= codeUpperLetterZ) {
+      if (char.charCodeAt() === codeUpperLetterA) {
+        decodedMessage += turnToLetter(codeUpperLetterX);
+      } else if (char.charCodeAt() === codeUpperLetterB) {
+        decodedMessage += turnToLetter(codeUpperLetterY);
+      } else if (char.charCodeAt() === codeUpperLetterC) {
+        decodedMessage += turnToLetter(codeUpperLetterZ);
+      } else {
+        decodedMessage += turnToLetter(char.charCodeAt() - shiftNumber);
+      }
+    } else if (char.charCodeAt() >= codeLowerLetterA &&
+      char.charCodeAt() <= codeLowerLetterZ) {
+      if (char.charCodeAt() === codeLowerLetterA) {
+        decodedMessage += turnToLetter(codeLowerLetterX);
+      } else if (char.charCodeAt() === codeLowerLetterB) {
+        decodedMessage += turnToLetter(codeLowerLetterY);
+      } else if (char.charCodeAt() === codeLowerLetterC) {
+        decodedMessage += turnToLetter(codeLowerLetterZ);
+      } else {
+        decodedMessage += turnToLetter(char.charCodeAt() - shiftNumber);
+      }
     } else {
-      return String.fromCharCode(char.charCodeAt() - shiftNumber);
+      decodedMessage += char;
     }
-  } else if (char.charCodeAt() >= codeLowerLetterA && 
-  char.charCodeAt() <= codeLowerLetterZ) {
-    if (char.charCodeAt() === codeLowerLetterA) {
-      return String.fromCharCode(codeLowerLetterX);
-    } else if (char.charCodeAt() === codeLowerLetterB) {
-      return String.fromCharCode(codeLowerLetterY);
-    } else if (char.charCodeAt() === codeLowerLetterC) {
-      return String.fromCharCode(codeLowerLetterZ);
-    } else {
-      return String.fromCharCode(char.charCodeAt() - shiftNumber);
-    }
-  } else {
-    return char;
   }
+  return decodedMessage;
 };
 
-console.log(encode('Z')) // C
-console.log(encode('W')) // Z
-console.log(encode('y')) // b
-console.log(encode('v')) // y
-console.log(encode('!')) // !
-
-console.log(decode('A')) // X
-console.log(decode('D')) // A
-console.log(decode('b')) // y
-console.log(decode('e')) // b
-console.log(decode('@')) // @
+// simple test
+let test = 'Hello World!';
+test = encode(test);
+console.log(test); // Khoor Zruog!
+test = decode(test);
+console.log(test); // Hello World!
