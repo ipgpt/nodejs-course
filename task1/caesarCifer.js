@@ -12,78 +12,65 @@ const codeLowerLetterX = 120;
 const codeLowerLetterY = 121;
 const codeLowerLetterZ = 122;
 
-const shiftNumber = 3;
 const turnToLetter = charCode => String.fromCharCode(charCode);
 
-const encode = message => {
-  let encodedMessage = '';
-  for (let i = 0; i < message.length; i++) {
-    let char = message[i];
-    if (char.charCodeAt() >= codeUpperLetterA &&
-      char.charCodeAt() <= codeUpperLetterZ) {
-      if (char.charCodeAt() === codeUpperLetterX) {
-        encodedMessage += turnToLetter(codeUpperLetterA);
-      } else if (char.charCodeAt() === codeUpperLetterY) {
-        encodedMessage += turnToLetter(codeUpperLetterB);
-      } else if (char.charCodeAt() === codeUpperLetterZ) {
-        encodedMessage += turnToLetter(codeUpperLetterC);
+const caesarCifer = (text, shiftNumber, action) => {
+  let changedText = '';
+  for (let i = 0; i < text.length; i++) {
+    let char = text[i];
+    let charCode = char.charCodeAt();
+    if (action === 'encode') {
+      let shiftedCharCode = charCode + shiftNumber;
+      if (charCode >= codeUpperLetterA &&
+        charCode <= codeUpperLetterZ) {
+          if (shiftedCharCode > codeUpperLetterZ) {
+            changedText += turnToLetter(shiftedCharCode - 
+              codeUpperLetterZ + codeUpperLetterA - 1);
+          } else {
+            changedText += turnToLetter(shiftedCharCode);
+          }
+      } else if (charCode >= codeLowerLetterA &&
+        charCode <= codeLowerLetterZ) {
+          if (shiftedCharCode > codeLowerLetterZ) {
+            changedText += turnToLetter(shiftedCharCode - 
+              codeLowerLetterZ + codeLowerLetterA - 1);
+          } else {
+            changedText += turnToLetter(shiftedCharCode);
+          }
       } else {
-        encodedMessage += turnToLetter(char.charCodeAt() + shiftNumber);
+        changedText += char;
       }
-    } else if (char.charCodeAt() >= codeLowerLetterA &&
-      char.charCodeAt() <= codeLowerLetterZ) {
-      if (char.charCodeAt() === codeLowerLetterX) {
-        encodedMessage += turnToLetter(codeLowerLetterA);
-      } else if (char.charCodeAt() === codeLowerLetterY) {
-        encodedMessage += turnToLetter(codeLowerLetterB);
-      } else if (char.charCodeAt() === codeLowerLetterZ) {
-        encodedMessage += turnToLetter(codeLowerLetterC);
+    } else if (action === 'decode') {
+      let shiftedCharCode = charCode - shiftNumber;
+      if (charCode >= codeUpperLetterA &&
+        charCode <= codeUpperLetterZ) {
+          if (shiftedCharCode < codeUpperLetterA) {
+            changedText += turnToLetter(codeUpperLetterZ - 
+              (codeUpperLetterA - shiftedCharCode) + 1);
+          } else {
+            changedText += turnToLetter(shiftedCharCode);
+          }
+      } else if (charCode >= codeLowerLetterA &&
+        charCode <= codeLowerLetterZ) {
+          if (shiftedCharCode < codeLowerLetterA) {
+            changedText += turnToLetter(codeLowerLetterZ - 
+              (codeLowerLetterA - shiftedCharCode) + 1);
+          } else {
+            changedText += turnToLetter(shiftedCharCode);
+          }
       } else {
-        encodedMessage += turnToLetter(char.charCodeAt() + shiftNumber);
+        changedText += char;
       }
-    } else {
-      encodedMessage += char;
+    }
+    else {
+      return text;
     }
   }
-  return encodedMessage;
-};
-
-const decode = message => {
-  let decodedMessage = '';
-  for (let i = 0; i < message.length; i++) {
-    let char = message[i];
-    if (char.charCodeAt() >= codeUpperLetterA &&
-      char.charCodeAt() <= codeUpperLetterZ) {
-      if (char.charCodeAt() === codeUpperLetterA) {
-        decodedMessage += turnToLetter(codeUpperLetterX);
-      } else if (char.charCodeAt() === codeUpperLetterB) {
-        decodedMessage += turnToLetter(codeUpperLetterY);
-      } else if (char.charCodeAt() === codeUpperLetterC) {
-        decodedMessage += turnToLetter(codeUpperLetterZ);
-      } else {
-        decodedMessage += turnToLetter(char.charCodeAt() - shiftNumber);
-      }
-    } else if (char.charCodeAt() >= codeLowerLetterA &&
-      char.charCodeAt() <= codeLowerLetterZ) {
-      if (char.charCodeAt() === codeLowerLetterA) {
-        decodedMessage += turnToLetter(codeLowerLetterX);
-      } else if (char.charCodeAt() === codeLowerLetterB) {
-        decodedMessage += turnToLetter(codeLowerLetterY);
-      } else if (char.charCodeAt() === codeLowerLetterC) {
-        decodedMessage += turnToLetter(codeLowerLetterZ);
-      } else {
-        decodedMessage += turnToLetter(char.charCodeAt() - shiftNumber);
-      }
-    } else {
-      decodedMessage += char;
-    }
-  }
-  return decodedMessage;
+  return changedText;
 };
 
 // simple test
-let test = 'Hello World!';
-test = encode(test);
-console.log(test); // Khoor Zruog!
-test = decode(test);
-console.log(test); // Hello World!
+let test1 = caesarCifer('Hello World!', 7, 'encode');
+console.log(test1); // Olssv Dvysk!
+let test2 = caesarCifer(test1, 7, 'decode');
+console.log(test2); // Hello World!
