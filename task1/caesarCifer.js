@@ -6,7 +6,7 @@ const codeLowerLetterZ = 122;
 
 const turnToLetter = charCode => String.fromCharCode(charCode);
 
-const caesarCipher = (text, shiftNumber, action) => {
+module.exports = (text, shiftNumber, action) => {
   let changedText = '';
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
@@ -59,9 +59,3 @@ const caesarCipher = (text, shiftNumber, action) => {
   }
   return changedText;
 };
-
-// simple test
-const test1 = caesarCipher('Hello World!', 7, 'encode');
-console.log(test1); // Olssv Dvysk!
-const test2 = caesarCipher(test1, 7, 'decode');
-console.log(test2); // Hello World!
